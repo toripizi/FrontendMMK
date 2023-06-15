@@ -1,0 +1,7 @@
+services:
+  web:
+    image: frontend_mmk
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./FrontendMMK:/usr/src/app
