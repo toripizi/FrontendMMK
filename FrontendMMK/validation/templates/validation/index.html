@@ -1,0 +1,92 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+<div id="box">
+    <div id="wiki">
+        <iframe src="{{ url }}"></iframe>
+    </div>
+    <div id="container">
+        <div id="parsed_wiki">
+            <div>
+                <input id="student_index" placeholder="Wpisz numer indeksu:"/>
+            </div>
+            <i class="fa-solid fa-plus empty_line"></i></br>
+            {{ value | safe }}
+        </div>
+        <div id="buttons">
+            <button id="send">wyślij</button>
+            <button id="notSent">nie wysyłaj</button>
+        </div>
+    </div>
+</div>
+<input style="display:none" value="{{name}}" id="name"/>
+<script>
+    data = {
+        url: "{{ url }}",
+        emptyLines: {},
+        lines: {},
+        student_index: 0,
+    };
+    
+    function emptyLineClickGenerator(index) {
+        return function() {
+            var answer = prompt("Co jest nie tak?")
+            if(!answer) return;
+            if(data.emptyLines[index]) {
+                data.emptyLines[index].push(answer)
+            } else {
+                data.emptyLines[index] = [answer];
+            }
+            g = document.createElement("i");
+            g.innerText = " " + answer
+            g.style.color = "#808080"
+            document.querySelectorAll('.empty_line')[index].appendChild(g)
+            
+        }
+    }
+    
+    function lineClickGenerator(index) {
+        return function() {
+            var answer = prompt("Co jest nie tak?")
+            if(!answer) return;
+            if(data.lines[index]) {
+                data.lines[index].push(answer)
+            } else {
+                data.lines[index] = [answer];
+            }
+            g = document.createElement("i");
+            g.innerText = " " + answer
+            g.style.color = "#808080"
+            document.querySelectorAll('.parsed_line')[index].appendChild(g)
+            
+        }
+    }
+    
+    [...document.querySelectorAll('.empty_line')].map((element,index) => element.addEventListener("click", emptyLineClickGenerator(index)));
+    
+    [...document.querySelectorAll('.parsed_line')].map((element,index) => element.addEventListener("click", lineClickGenerator(index)));
+    
+    document.querySelector("#send").addEventListener("click", async () => {
+        data.student_index = localStorage.student_index
+        await fetch('/create_log_message', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      location.reload()
+    });
+
+    student_index.value = localStorage.student_index ?? ""
+    student_index.addEventListener('keyup', event => {
+        localStorage.student_index = student_index.value
+    })
+
+</script>

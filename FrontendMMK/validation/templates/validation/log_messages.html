@@ -1,0 +1,42 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+</head>
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>empty Lines</th>
+            <th>lines</th>
+            <th>student index</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in objects %}
+        <tr>
+            <td style="width: 20%">{{i.url}}</td>
+            <td style="width: 35%;">
+                {% for key, value in i.emptyLines.items %}
+                <p>
+                Linia {{key}}:
+                    {% for row in value %}
+                    <span>{{row}}</span>
+                    {% endfor %}
+                </p>
+                {% endfor %}
+            </td>
+            <td style="width: 35%;">
+                {% for key, value in i.lines.items %}
+                <p>
+                Linia {{key}}:
+                    {% for row in value %}
+                    <span>{{row}}</span>
+                    {% endfor %}
+                </p>
+                {% endfor %}
+            </td>
+            <td style="width: 10%">{{i.student_index}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
