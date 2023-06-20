@@ -15,7 +15,6 @@ class Iterator:
     def __next__(self):
         idx = random.randint(0, len(self.lines))
         line = self.lines.pop(idx)
-        # print(json.loads(line))
         if line:
             json_data = json.loads(line)
             return {
